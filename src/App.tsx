@@ -1,8 +1,11 @@
-import { FloorMapPage } from './pages/floor-map/FloorMapPage';
+import { AppRouter } from './app/router';
+import { AuthProvider } from '@/features/auth/api/useAuth';
 
 function App() {
   return (
-    <FloorMapPage />
+    <AuthProvider>
+      <AppRouter />
+    </AuthProvider>
   );
 }
 
