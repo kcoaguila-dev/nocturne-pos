@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Clock, X, PlusCircle } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { useTableStore } from '../store/useTableStore';
+import { useLiveTables } from '../api/useLiveTables';
 import { useCastStore } from '@/features/cast';
 import { useOrderStore, TableDetailModal } from '@/features/orders';
 import type { TableSession } from '../types';
@@ -129,6 +130,7 @@ const TableCard: React.FC<{ table: TableSession }> = ({ table }) => {
 
 export const FloorMap: React.FC = () => {
   const { tables, updateTableRemainingTime } = useTableStore();
+  const { loading, error } = useLiveTables();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -139,6 +141,22 @@ export const FloorMap: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [tables, updateTableRemainingTime]);
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-full text-white/50">
+        Loading live tables...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-full text-red-500">
+        Error loading tables: {error}
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 flex-1">
